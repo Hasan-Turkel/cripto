@@ -1,14 +1,3 @@
-// **********fetch**********
-
-const options = {
-    headers: {
-      'x-access-token': 'coinranking34b433502208780ff42dfa4308d73b2ded4113203e6a6d88',
-    },
-  };
-  
-  fetch('https://api.coinranking.com/v2/coins', options)
-    .then((response) => response.json())
-    .then((result) => console.log(result.data.coins));
 
 // *******selectors********
 
@@ -20,22 +9,34 @@ const main = document.querySelector("main")
 
 // ******functions*******
 
-const writeDom = (json)=>{
- const object = json.filter(obj=> obj.name == input.value );
- main.innerHTML += `<div class="d-flex flex-column col-3 bg-white p-3 rounded-4 shadow" style="width: 150px;">
- <p>${object.name}</p>
- <p>${object.name}</p>
- <img src="" alt="">
- <p>${object.name}</p>
+const writeDom = (result)=>{
+ 
+ let object = result.data.coins.filter(obj=> obj.name.toLowerCase().startsWith(input.value.toLowerCase())|| obj.symbol.toLowerCase() == input.value.toLowerCase());
+ 
+ main.innerHTML += `<div class="d-flex flex-column col-3 bg-white p-3 rounded-4 shadow" style="min-width: 200px;">
+ <h5>${object[0].name} <span class= "btn btn-warning">${object[0].symbol}</span></h5>
+ <p>$${object[0].price}</p>
+ <img src="${object[0].iconUrl}" alt="" width = "100px">
+ <p>${object[0].change}</p>
 </div>`
-
+input.value = ""
 }
+
 
 // ******events******
 
 form.addEventListener("submit", (e)=>{ 
     e.preventDefault()
-    console.log(input.value);
-    input.value = ""
 
+    const options = {
+      headers: {
+        'x-access-token': 'coinranking34b433502208780ff42dfa4308d73b2ded4113203e6a6d88',
+      },
+    };
+    fetch('https://api.coinranking.com/v2/coins', options)
+    .then((response) => response.json())
+    .then((result) => writeDom (result));
+
+  
 })
+
