@@ -43,7 +43,7 @@ const writeDom = (result) => {
   let object = result.data.coins.filter(
     (obj) =>
       obj.name.toLowerCase().startsWith(input.value.toLowerCase().trim()) ||
-      obj.symbol.toLowerCase() == input.value.toLowerCase().trim()
+      obj.symbol.toLowerCase().startsWith( input.value.toLowerCase().trim())
   );
 
 
