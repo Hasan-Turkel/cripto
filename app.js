@@ -6,6 +6,10 @@ const main = document.querySelector("main");
 const section = document.querySelector("section");
 
 
+// ********variables***********
+
+coins = []
+
 
 // ******events******
 
@@ -41,9 +45,25 @@ const writeDom = (result) => {
       obj.name.toLowerCase().startsWith(input.value.toLowerCase().trim()) ||
       obj.symbol.toLowerCase() == input.value.toLowerCase().trim()
   );
+
+
  
 
-  if (object.length){ yaz(object)
+  if (object.length){ 
+
+    if(coins.includes(object[0].symbol)){
+      exist (object)
+
+    }
+
+    else{
+      coins.push(object[0].symbol)
+      yaz(object)
+
+    }
+
+    
+  
  
   }
   else {
@@ -74,6 +94,20 @@ const hataYaz = ()=> {
       section.innerHTML = "";
     }, 3000);
     input.value = "";
+
+}
+
+
+// varsa hata veren fonksiyon
+
+const exist = (object)=>{
+
+  section.innerHTML = `<h5 class= "text-danger"> ${object[0].name} ${object[0].symbol} zaten var. </h5>`
+
+  setTimeout(() => {
+    section.innerHTML = "";
+  }, 3000);
+  input.value = "";
 
 }
 
