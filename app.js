@@ -37,6 +37,5 @@ form.addEventListener("submit", (e)=>{
     .then((response) => response.json())
     .then((result) => writeDom (result));
 
-  
 })
 
