@@ -4,6 +4,7 @@ const form = document.querySelector("form");
 const input = document.querySelector("input");
 const main = document.querySelector("main");
 const section = document.querySelector("section");
+const del = document.getElementById("delete");
 
 
 // ********variables***********
@@ -29,9 +30,14 @@ form.addEventListener("submit", (e) => {
       domHata()
       }
      return response.json() })
-     .then((result) => writeDom(result));
+     .then((result) => writeDom(result));   
 }
 );
+
+del.addEventListener("click", ()=>{
+  main.innerHTML=""
+  coins = []
+})
 
 
 // ******functions*******
@@ -43,11 +49,13 @@ const writeDom = (result) => {
   let object = result.data.coins.filter(
     (obj) =>
       obj.name.toLowerCase().startsWith(input.value.toLowerCase().trim()) ||
-      obj.symbol.toLowerCase().startsWith( input.value.toLowerCase().trim())
+      obj.symbol.toLowerCase().startsWith( input.value.toLowerCase().trim())  
   );
 
+  console.log(object);
 
- 
+  console.log(result);
+
 
   if (object.length){ 
 
@@ -58,12 +66,12 @@ const writeDom = (result) => {
 
     else{
       coins.push(object[0].symbol)
+      
+      console.log(coins);
       yaz(object)
+      
 
     }
-
-    
-  
  
   }
   else {
@@ -76,23 +84,62 @@ const writeDom = (result) => {
 // cardı doma yazan fonksiyon
 
 const yaz = (object) =>{
-  main.innerHTML += `<div class="d-flex flex-column col bg-white p-3 rounded-4 shadow" style="min-width: 200px; max-width: 200px;">
-  <h5>${object[0].name} <span class= "btn btn-warning">${object[0].symbol}</span></h5>
+
+  let changeColor = ""
+  let status = ""
+
+  if (object[0].change>0) {
+    changeColor = "green"
+    status = "📈"
+  }
+  else {
+    changeColor = "red"
+    status = "📉"
+  }
+
+
+
+  main.innerHTML += `<div class="d-flex flex-column col bg-white p-3 rounded-4 shadow gap-2"  id ="${object[0].symbol}" style="min-width: 200px; max-width: 200px;">
+  <div class="d-flex gap-1">
+  
+<div class="d-flex flex-column">
+<h5 >${object[0].name} </h5>
+<span class= "btn btn-warning">${object[0].symbol}</span>
+
+</div>
+
+  
+  <button class="btn text-danger col-3 single fw-bold ms-auto" style="height: 30px ;" > X </button></div>
   <p>$${object[0].price}</p>
-  <img src="${object[0].iconUrl}" alt="" width = "100px">
-  <p>${object[0].change}</p>
+  <img class=""mt src="${object[0].iconUrl}" alt="" width = "100px">
+  <div >
+  <p style = "color : ${changeColor};">${ status + " " + "%" + object[0].change}</p>
+  </div>
+  
   </div>`;
   input.value = "";
+
+// coinleri tek tek silme işlemi 
+const singleDelete = document.querySelectorAll(".single")
+
+singleDelete.forEach((button)=> {
+  button.addEventListener("click", (e)=> { 
+    e.target.closest(".col").remove()
+    delete coins[coins.indexOf(e.target.closest(".col").id)]
+
+  })
+})
+
 }
 
 // aranan coin bulunamadığından hata yazan fonksiyon
 
 const hataYaz = ()=> { 
-  section.innerHTML = `<h5 class= "text-danger"> Aradığınız coin bulunamadı. Coin ismini doğru yazdığınızdan emin olunuz.</h5>`;
+  section.innerHTML = `<h5 class= "text-danger"> Aradığınız coin "${input.value}" bulunamadı. Coin ismini doğru yazdığınızdan emin olunuz.</h5>`;
 
     setTimeout(() => {
       section.innerHTML = "";
-    }, 3000);
+    }, 4000);
     input.value = "";
 
 }
@@ -118,3 +165,4 @@ const domHata = () =>{
   section.innerHTML = `<h5 class= "text-danger"> Server hatası. </h5>`
 
 }
+
